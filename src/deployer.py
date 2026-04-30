@@ -51,6 +51,24 @@ def collect_files_prod():
     return files
 
 
+# Reference implementation provided as a starting point for contributors.
+def collect_files_changed():
+    """Collect .sql files under src/snowflake that changed vs. origin/master."""
+    import subprocess
+    result = subprocess.run(
+        ["git", "diff", "--name-only", "origin/master...HEAD"],
+        capture_output=True, text=True, check=True
+    )
+    changed = result.stdout.splitlines()
+    files = []
+    for path in changed:
+        full_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), path)
+        if full_path.startswith(SNOWFLAKE_DIR) and path.endswith(".sql"):
+            if os.path.isfile(full_path):
+                files.append(full_path)
+    return sorted(files, key=alphanum_key)
+
+
 def relative_path(file):
     return os.path.relpath(file, SNOWFLAKE_DIR)
 
