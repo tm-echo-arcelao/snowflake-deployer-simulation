@@ -1,0 +1,26 @@
+name: Deploy (Prod)
+
+on:
+  pull_request:
+
+jobs:
+  deploy-prod:
+    name: Run deployer in PROD mode
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.lock
+
+      - name: Run deployer
+        env:
+          ENV: PROD
+        run: python src/deployer.py
