@@ -2,6 +2,7 @@ name: Deploy (Non-Prod)
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   deploy-non-prod:
